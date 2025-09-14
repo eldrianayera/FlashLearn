@@ -1,0 +1,44 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+.eggs/
+src/**/settings.py
+src/**/settings/
+
+# --- Poetry ---
+poetry.lock
+# (optional: commit poetry.lock if you want to lock exact versions for deployments/CI.
+# Best practice: commit it for apps, ignore it for libraries.)
+
+# --- Virtualenvs ---
+.venv/
+venv/
+env/
+ENV/
+
+# --- Django ---
+*.log
+*.pot
+*.py,cover
+db.sqlite3
+media/
+staticfiles/           # collected static files (from collectstatic)
+src/**/migrations/*    # ignore migration files if you don't want them in git
+!src/**/migrations/__init__.py   # keep the package init
+
+# --- Editor / IDE ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+
+
