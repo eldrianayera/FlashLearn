@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils.text import slugify
+import uuid
 
 # Create your models here.
 class User(AbstractUser):
@@ -16,8 +17,9 @@ class Course(models.Model):
     
     def save(self, *args, **kwargs):
         if not self.slug :
-            self.slug = slugify(f"${self.name}-{self.id}")
-        return super().save(*args, **kwargs)
+            base = slugify(self.name) or 'course'
+            self.slug = f"{base}-{uuid.uuid4().hex[:8]}"
+        super().save(*args, **kwargs)
     
     
     def __str__(self):
@@ -32,7 +34,6 @@ class Document(models.Model):
     course = models.ForeignKey(Course, related_name='documents', on_delete=models.CASCADE)
     file = models.FileField(upload_to='documents/', null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='documents')
-    
     
     def __str__(self):
         return self.name

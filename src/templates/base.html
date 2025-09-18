@@ -1,0 +1,53 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      {% block title %}
+        FlashLearn
+      {% endblock %}
+    </title>
+    <link rel="stylesheet" href="{% static 'output.css' %}" />
+  </head>
+  <body class="bg-gray-50 text-gray-900">
+    <!-- NAVBAR -->
+    <nav class="bg-white border-b border-gray-200 shadow-sm">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+          <!-- Left side -->
+          <div class="flex">
+            <a href="{% url 'courses' %}" class="flex items-center text-xl font-bold text-blue-600">FlashLearn</a>
+            <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+              <a href="{% url 'courses' %}" class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 hover:text-blue-600">Courses</a>
+              <!-- Add more links if needed -->
+              {# <a href="#" class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 hover:text-blue-600">Documents</a> #}
+            </div>
+          </div>
+
+          <!-- Right side -->
+          <div class="flex items-center">
+            {% if user.is_authenticated %}
+              <span class="hidden sm:inline-block mr-4 text-sm text-gray-600">Hello, {{ user.username }}</span>
+              <form action="{% url 'logout' %}" method="post" class="inline">
+                {% csrf_token %}
+                <button type="submit" class="text-sm px-3 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700">Logout</button>
+              </form>
+            {% else %}
+              <a href="{% url 'login' %}" class="text-sm px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100">Login</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="py-6">
+      {% block content %}
+
+      {% endblock %}
+    </main>
+  </body>
+</html>

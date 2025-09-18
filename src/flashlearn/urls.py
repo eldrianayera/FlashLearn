@@ -21,8 +21,6 @@ from django.urls import path , include
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("api/", include('core.urls')),
-    # dj-rest-auth (login/logout/password reset/verify/refresh when USE_JWT=True)
-    path("api/auth/", include("dj_rest_auth.urls")),
-    path("api/auth/registration/", include("dj_rest_auth.registration.urls")),      # register
+    path("", include('core.urls')),
+    path("__reload__/", include("django_browser_reload.urls")),
 ]

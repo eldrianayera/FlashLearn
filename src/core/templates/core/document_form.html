@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block title %}
+  Add Document
+{% endblock %}
+
+{% block content %}
+  <div class="max-w-2xl mx-auto bg-white shadow rounded-xl p-8 mt-10">
+    <h1 class="text-2xl font-bold text-gray-900 mb-6 text-center">➕ Add a New Document</h1>
+
+    <form method="post" enctype="multipart/form-data" class="space-y-5">
+      {% csrf_token %}
+
+      <!-- Name -->
+      <div>
+        <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+        {% render_field form.name class='block w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:border-blue-900 focus:ring-2 focus:ring-blue-900 sm:text-sm' %}
+      </div>
+
+      <!-- Note -->
+      <div>
+        <label for="{{ form.document_note.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Note</label>
+        {% render_field form.document_note class='block w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:border-blue-900 focus:ring-2 focus:ring-blue-900 sm:text-sm' %}
+      </div>
+
+      <!-- Summary -->
+      <div>
+        <label for="{{ form.summary.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">Summary</label>
+        {% render_field form.summary class='block w-full px-4 py-2 rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:border-blue-900 focus:ring-2 focus:ring-blue-900 sm:text-sm' %}
+      </div>
+
+      <!-- File -->
+      <div>
+        <label for="{{ form.file.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">File</label>
+        {% render_field form.file class='block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-50 file:text-blue-600 hover:file:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-900' %}
+      </div>
+
+      <!-- Submit -->
+      <button type="submit" class="w-full py-2 px-4 bg-blue-600 text-white text-sm font-semibold rounded-lg shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-900 focus:ring-offset-1">Save Document</button>
+    </form>
+
+    <!-- Back link -->
+    <div class="mt-4 text-center">
+      <a href="{% url 'course-detail' course.slug %}" class="text-sm text-gray-600 hover:text-blue-700">← Back to Course</a>
+    </div>
+  </div>
+{% endblock %}

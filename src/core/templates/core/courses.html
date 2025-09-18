@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="max-w-6xl mx-auto py-10">
+    <h1 class="text-3xl font-bold mb-8 text-center">📚 My Courses</h1>
+
+    {% if courses %}
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {% for course in courses %}
+          <div class="bg-white shadow rounded-2xl p-5 flex flex-col">
+            <h2 class="text-xl font-semibold text-blue-600 mb-2">{{ course.name }}</h2>
+            {% if course.course_note %}
+              <p class="text-gray-500 text-sm mb-4">{{ course.course_note }}</p>
+            {% endif %}
+            <div class="mt-auto flex justify-between items-center text-sm text-gray-400">
+              <span>{{ course.created_at|date:'M d, Y' }}</span>
+              <a href="{% url 'course-detail' course.slug %}" class="text-blue-500 hover:underline">View →</a>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-center text-gray-500 mt-6">You don’t have any courses yet. 🚀</p>
+    {% endif %}
+  </div>
+{% endblock %}

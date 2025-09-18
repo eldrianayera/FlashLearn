@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Log In
+{% endblock %}
+
+{% block content %}
+  <div class="flex min-h-screen items-center justify-center bg-gray-50 px-4">
+    <div class="w-full max-w-md bg-white shadow-md rounded-xl p-8">
+      <!-- Header -->
+      <h1 class="text-2xl font-bold text-gray-900 mb-6 text-center">Log in to FlashLearn</h1>
+
+      <!-- Form -->
+      <form method="post" class="space-y-4">
+        {% csrf_token %}
+
+        <!-- Render fields manually for styling -->
+        <div>
+          <label for="{{ form.username.id_for_label }}" class="block text-sm font-medium text-gray-700">Username</label>
+          {{ form.username }}
+        </div>
+
+        <div>
+          <label for="{{ form.password.id_for_label }}" class="block text-sm font-medium text-gray-700">Password</label>
+          {{ form.password }}
+        </div>
+
+        <!-- Button -->
+        <div>
+          <button type="submit" class="w-full py-2 px-4 bg-blue-600 text-white text-sm font-semibold rounded-lg shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1">Log in</button>
+        </div>
+      </form>
+
+      <!-- Extra links -->
+      <p class="mt-6 text-center text-sm text-gray-600">
+        Don’t have an account?
+        <a href="{% url 'login' %}" class="text-blue-600 hover:underline">Sign up</a>
+      </p>
+      <p class="mt-2 text-center">
+        <a href="{% url 'password_reset' %}" class="text-sm text-gray-500 hover:text-blue-700">Forgot your password?</a>
+      </p>
+    </div>
+  </div>
+{% endblock %}
