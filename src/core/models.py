@@ -30,7 +30,7 @@ class Document(models.Model):
     name = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True)
     document_note = models.TextField(max_length=50, blank=True)
-    summary = models.TextField(max_length=50, null=True, blank=True)
+    summary = models.TextField(max_length=3000, null=True, blank=True)
     course = models.ForeignKey(Course, related_name='documents', on_delete=models.CASCADE)
     file = models.FileField(upload_to='documents/', null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='documents')

@@ -108,7 +108,7 @@ class DocumentCreateView(CreateView):
 class DocumentUpdateView(UpdateView):
     model = Document
     template_name = "core/document_form.html"
-    fields = ['name','file']
+    fields = ['name','file','document_note','summary']
     
     def get_success_url(self):
         return reverse("course-detail", args=[self.object.course.slug])
