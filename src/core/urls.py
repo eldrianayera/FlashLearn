@@ -9,5 +9,6 @@ router.register('courses', views.CourseViewSet)
 router.register('flashcards', views.FlashcardViewSet)
 
 urlpatterns = [
-    path('',include(router.urls))
+    path('',include(router.urls)),
+    path('accounts/', include("django.contrib.auth.urls"))
 ]

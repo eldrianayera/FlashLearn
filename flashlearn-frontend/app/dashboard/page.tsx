@@ -1,15 +1,42 @@
 "use client";
 
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Card, Button, Row, Col, Container } from "react-bootstrap";
 import CoursesContext from "@/contexts/DataContext";
 import Link from "next/link";
+import AuthContext from "@/contexts/AuthContext";
+import { useRouter } from "next/navigation";
 
 function Dashboard() {
-  const { data: courses, isLoading } = useContext(CoursesContext);
+  const { data: courses, isLoading: courseLoading } =
+    useContext(CoursesContext);
+  const { isAuthenticated, isLoading: authLoading } = useContext(AuthContext);
+  const router = useRouter();
+  const [isAuthenticatedChecked, setIsAuthenticatedChecked] = useState(false);
 
-  if (isLoading) {
-    return <div>Loading...</div>; // Show loading state while fetching data
+  useEffect(() => {
+    if (authLoading) return; // Wait for authentication loading state to finish
+    if (!isAuthenticated) {
+      router.push("/login"); // Redirect to login if not authenticated
+    }
+    setIsAuthenticatedChecked(true); // Mark authentication as checked
+  }, [isAuthenticated, authLoading]);
+
+  // Loading state for both authentication and courses
+  if (authLoading || !isAuthenticatedChecked) {
+    return (
+      <div className="text-center">
+        <p>Authenticating...</p> {/* Show authentication loading */}
+      </div>
+    );
+  }
+
+  if (courseLoading) {
+    return (
+      <div className="text-center">
+        <p>Loading courses...</p> {/* Show loading while fetching courses */}
+      </div>
+    );
   }
 
   return (
@@ -26,7 +53,7 @@ function Dashboard() {
 
                 <Button variant="primary" className="w-100">
                   <Link href={`/dashboard/${course.id}`} passHref>
-                    <span className="text-white">View Course</span>{" "}
+                    <span className="text-white">View Course</span>
                   </Link>
                 </Button>
               </Card.Body>

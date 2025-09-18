@@ -4,6 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Navbar from "./components/Navbar";
 import { CoursesContextProvider } from "@/contexts/DataContext";
 import { ReactQueryProvider } from "@/contexts/QueryProvider";
+import { AuthContextProvider } from "@/contexts/AuthContext";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -19,10 +20,12 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <ReactQueryProvider>
-          <CoursesContextProvider>
-            <Navbar />
-            {children}
-          </CoursesContextProvider>
+          <AuthContextProvider>
+            <CoursesContextProvider>
+              <Navbar />
+              {children}
+            </CoursesContextProvider>
+          </AuthContextProvider>
         </ReactQueryProvider>
       </body>
     </html>

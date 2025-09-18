@@ -1,63 +1,27 @@
 "use client";
 
+import AuthContext from "@/contexts/AuthContext";
 import axios from "axios";
-import { FormEvent, useState } from "react";
-
-interface LogInData {
-  username: string;
-  password: string;
-}
+import { useRouter } from "next/navigation";
+import { FormEvent, useContext, useEffect, useState } from "react";
 
 export default function SignUp() {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [errorMsg, setErrorMsg] = useState<string>("");
+  const { isAuthenticated, isLoading, logIn } = useContext(AuthContext);
 
-  const handleSignUp = (e: FormEvent) => {
-    e.preventDefault();
+  const router = useRouter();
 
-    async function postData() {
-      const data: LogInData = {
-        username,
-        password,
-      };
-
-      try {
-        const response = await axios.post(
-          "http://localhost:8000/api/auth/login/",
-          data,
-          {
-            headers: {
-              "Content-Type": "application/json", // Indicate the body format
-            },
-          }
-        );
-
-        const access_token = response.data.access;
-        console.log(access_token);
-
-        localStorage.setItem("access_token", access_token);
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          if (error.response) {
-            console.error("Error Response:", error.response.data);
-            console.error("Error Status:", error.response.status);
-            console.error("Error Headers:", error.response.headers);
-            console.error("Error Message:", error.response.headers);
-          } else if (error.request) {
-            // If the request was made but no response was received
-            console.error("Error Request:", error.request);
-          } else {
-            // Something else triggered the error
-            console.error("Error Message:", error.message);
-          }
-        } else {
-          console.error("Unexpected Error:", error);
-        }
-      }
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push("/dashboard");
     }
+  }, [isAuthenticated]);
 
-    postData();
+  const handleSignUp = async (e: FormEvent) => {
+    e.preventDefault();
+    await logIn({ username, password });
   };
 
   return (
