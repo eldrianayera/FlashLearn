@@ -42,3 +42,4 @@ src/**/migrations/*    # ignore migration files if you don't want them in git
 Thumbs.db
 
 
+src/node_modules

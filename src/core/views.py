@@ -1,17 +1,12 @@
-from ast import Delete
-from cmd import PROMPT
-from time import process_time_ns
-from urllib import response
-from django import dispatch
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from .models import Course , User , Document , Flashcard
-from django.views.generic import ListView , DetailView , CreateView , UpdateView , DeleteView
+from django.views.generic import ListView , DetailView , CreateView , UpdateView , DeleteView , TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin , UserPassesTestMixin
 import fitz
-import requests
-import json
 from openai import OpenAI
+from .forms import SignUpForm
+from django.contrib.auth import login
 
 def extract_pdf_text(file):
     doc = fitz.open(file.path)
@@ -50,6 +45,41 @@ def summarize_text_with_openrouter(text):
 
 
 # Create your views here.
+
+class LandingPageView(TemplateView):
+    template_name = "core/landing_page_view.html"
+    
+
+class UserCreateView(CreateView):
+    form_class = SignUpForm
+    template_name = "registration/signup.html"
+    success_url = reverse_lazy("courses")
+    
+    # If user is already authenticated, keep them out of signup
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated :
+            return redirect(self.get_success_url())
+        return super().dispatch(request, *args, **kwargs)
+    
+    # Auto-login after successful signup
+    def form_valid(self, form):
+        response =  super().form_valid(form)
+        login(self.request, self.object)
+        return response
+    
+
+class CourseCreateView(CreateView):
+    model = Course
+    template_name = "core/course_create.html"
+    fields = ["name","course_note"]
+    success_url = reverse_lazy('courses')
+    
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+
+
     
 class CourseListView(LoginRequiredMixin , UserPassesTestMixin, ListView):
     model = Course

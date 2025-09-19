@@ -12,7 +12,7 @@ class Course(models.Model):
     name = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    course_note = models.TextField(max_length=50, blank=True, null=True)
+    course_note = models.TextField(max_length=1000, blank=True, null=True)
     slug = models.SlugField(unique=True, blank=True, null=True)
     
     def save(self, *args, **kwargs):
