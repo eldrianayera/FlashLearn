@@ -4,6 +4,23 @@
 {% block content %}
   <div class="max-w-2xl mx-auto py-10 px-4">
     <!-- Header -->
+    <nav class="text-sm mb-6">
+      <ol class="flex space-x-2 text-gray-500">
+        <li>
+          <a href="{% url 'courses' %}" class="hover:underline text-blue-600">Courses</a>
+        </li>
+        <li>/</li>
+        <li>
+          <a href="{% url 'course-detail' document.course.slug %}" class="hover:underline text-blue-600">{{ document.course.name }}</a>
+        </li>
+        <li>/</li>
+        <li>
+          <a href="{% url 'document-detail' document.pk %}" class="hover:underline text-blue-600">{{ document.name }}</a>
+        </li>
+        <li>/</li>
+        <li class="text-gray-700 font-medium">Flashcard</li>
+      </ol>
+    </nav>
     <div class="mb-8 text-center">
       <h1 class="text-3xl font-extrabold text-gray-900 flex items-center justify-center gap-2">
         {% if update %}
@@ -52,8 +69,11 @@
 
         <!-- Actions -->
         <div class="flex items-center justify-end gap-3 pt-4">
-          <a href="{% url 'document-detail' document_pk %}" class="inline-flex items-center px-5 py-2 rounded-xl border border-gray-300 text-gray-700 bg-gray-50 hover:bg-gray-100 hover:shadow-sm transition-all">✖ Cancel</a>
-          <button type="submit" class="inline-flex items-center px-5 py-2 rounded-xl bg-gradient-to-r from-pink-500 to-indigo-500 text-white font-semibold shadow hover:shadow-md hover:from-pink-600 hover:to-indigo-600 focus:outline-none focus:ring-2 focus:ring-pink-400 transition-all">
+          <!-- Generate with AI -->
+          <button type="button" class="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold shadow hover:from-purple-600 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all">🤖 Generate with AI</button>
+
+          <!-- Save/Create -->
+          <button type="submit" class="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-blue-600 text-white font-semibold shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all">
             {% if update %}
               💾 Save
             {% else %}

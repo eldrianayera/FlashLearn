@@ -193,7 +193,7 @@ class FlashcardCreateView(LoginRequiredMixin,CreateView):
     
     def get_context_data(self, **kwargs):
         ctx =  super().get_context_data(**kwargs)
-        ctx['document_pk'] = self.document.pk
+        ctx['document'] = self.document
         return ctx
 
 
@@ -213,7 +213,7 @@ class FlashcardUpdateView(LoginRequiredMixin,UpdateView):
     
     def get_context_data(self, **kwargs):
         ctx =  super().get_context_data(**kwargs)
-        ctx['document_pk'] = self.object.document.pk
+        ctx['document'] = self.object.document
         ctx['update'] = True
         return ctx
     
