@@ -68,7 +68,7 @@ class UserCreateView(CreateView):
         return response
     
 
-class CourseCreateView(CreateView):
+class CourseCreateView(LoginRequiredMixin,CreateView):
     model = Course
     template_name = "core/course_create.html"
     fields = ["name","course_note"]
@@ -77,17 +77,34 @@ class CourseCreateView(CreateView):
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
+    
+
+    
+
+class CourseUpdateView(UpdateView):
+    model = Course
+    template_name = "core/course_update.html"
+    fields = ["name", "course_note"] 
+    
+    def get_success_url(self):
+        return reverse_lazy('course-detail' , args=[self.object.slug])
+
+class CourseDeleteView(DeleteView):
+    model = Course
+    template_name = "core/course_delete.html"
+    context_object_name = "course"
+    
+    def get_success_url(self):
+        return reverse_lazy('courses')
+
 
 
 
     
-class CourseListView(LoginRequiredMixin , UserPassesTestMixin, ListView):
+class CourseListView(LoginRequiredMixin , ListView):
     model = Course
     template_name = "core/courses.html"
     context_object_name = "courses"
-    
-    def test_func(self):
-        return True
     
     def get_queryset(self):
         return super().get_queryset().filter(user=self.request.user)
