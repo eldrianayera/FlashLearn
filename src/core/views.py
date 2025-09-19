@@ -119,7 +119,7 @@ class CourseDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
         return obj.user == self.request.user
     
 
-class DocumentCreateView(CreateView):
+class DocumentCreateView(LoginRequiredMixin,CreateView):
     model = Document
     template_name = "core/document_form.html"
     fields = ['name','file','document_note']
@@ -152,7 +152,14 @@ class DocumentCreateView(CreateView):
         return context
     
 
-class DocumentUpdateView(UpdateView):
+class DocumentDetailView(LoginRequiredMixin,DetailView):
+    model = Document
+    template_name = "core/document_detail_view.html"
+    context_object_name = "document"
+
+    
+
+class DocumentUpdateView(LoginRequiredMixin,UpdateView):
     model = Document
     template_name = "core/document_form.html"
     fields = ['name','file','document_note','summary']
@@ -166,7 +173,7 @@ class DocumentUpdateView(UpdateView):
         return ctx
     
 
-class DocumentDeleteView(DeleteView):
+class DocumentDeleteView(LoginRequiredMixin,DeleteView):
     model = Document
     template_name = "core/document_delete.html"
     context_object_name = "document"
@@ -174,3 +181,49 @@ class DocumentDeleteView(DeleteView):
     def get_success_url(self):
         return reverse('course-detail',args=[self.object.course.slug])
     
+
+class FlashcardCreateView(LoginRequiredMixin,CreateView):
+    model = Flashcard
+    template_name = "core/flashcard_form.html"
+    fields = ["question","answer"]
+
+    def dispatch(self, request, *args, **kwargs):
+        self.document = get_object_or_404(Document, pk=kwargs["pk"])
+        return super().dispatch(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs):
+        ctx =  super().get_context_data(**kwargs)
+        ctx['document_pk'] = self.document.pk
+        return ctx
+
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        form.instance.document = self.document
+        return super().form_valid(form)
+    
+    def get_success_url(self):
+        return reverse_lazy('document-detail', args=[self.object.document.pk])
+
+
+class FlashcardUpdateView(LoginRequiredMixin,UpdateView):
+    model = Flashcard
+    template_name = "core/flashcard_form.html"
+    fields = ['question','answer']
+    
+    def get_context_data(self, **kwargs):
+        ctx =  super().get_context_data(**kwargs)
+        ctx['document_pk'] = self.object.document.pk
+        ctx['update'] = True
+        return ctx
+    
+    def get_success_url(self):
+        return reverse_lazy('document-detail', args=[self.object.document.pk])
+
+
+class FlashcardDeleteView(LoginRequiredMixin,DeleteView):
+    model = Flashcard
+    template_name = "core/flashcard_delete.html"
+    
+    def get_success_url(self):
+        return reverse_lazy('document-detail', args=[self.object.document.pk])
