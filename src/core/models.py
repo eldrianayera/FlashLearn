@@ -39,8 +39,8 @@ class Document(models.Model):
         return self.name
 
 class Flashcard(models.Model):
-    question = models.CharField(max_length=50)
-    answer = models.CharField(max_length=100)
+    question = models.CharField(max_length=1000)
+    answer = models.CharField(max_length=1000)
     document = models.ForeignKey(Document, related_name='flashcards', on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='flashcards')
     

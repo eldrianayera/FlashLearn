@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Generate Flashcard · {{ document.name }}
+{% endblock %}
+
+{% block content %}
+  <div class="max-w-3xl mx-auto py-10 px-4">
+    <!-- Breadcrumb -->
+    <nav class="text-sm mb-6">
+      <ol class="flex space-x-2 text-gray-500">
+        <li>
+          <a href="{% url 'courses' %}" class="hover:underline text-blue-600">Courses</a>
+        </li>
+        <li>/</li>
+        <li>
+          <a href="{% url 'course-detail' document.course.slug %}" class="hover:underline text-blue-600">{{ document.course.name }}</a>
+        </li>
+        <li>/</li>
+        <li>
+          <a href="{% url 'document-detail' document.pk %}" class="hover:underline text-blue-600">{{ document.name }}</a>
+        </li>
+        <li>/</li>
+        <li>
+          <a href="{% url 'flashcard-create' document.pk %}" class="hover:underline text-blue-600"> Create Flashcard </a>
+        </li>
+        <li>/</li>
+        <li class="text-gray-700 font-medium">Generate Flashcard</li>
+      </ol>
+    </nav>
+
+    <!-- Header -->
+    <div class="mb-8 text-center">
+      <h1 class="text-3xl font-extrabold text-gray-900 flex items-center justify-center gap-2">✨ Generate Flashcard with AI</h1>
+      <p class="text-sm text-gray-500 mt-2">Enter an optional topic and choose whether AI should be limited to this document’s content. The result will be prefilled on the Create Flashcard page.</p>
+    </div>
+
+    <!-- Card -->
+    <div class="relative rounded-3xl border border-gray-200 bg-white shadow-lg overflow-hidden">
+      <!-- playful glow background -->
+      <div class="pointer-events-none absolute -top-10 -left-10 h-32 w-32 rounded-full bg-gradient-to-br from-pink-200 via-purple-200 to-indigo-200 opacity-60 blur-3xl"></div>
+      <div class="pointer-events-none absolute -bottom-12 -right-12 h-40 w-40 rounded-full bg-gradient-to-tr from-blue-200 via-cyan-200 to-emerald-200 opacity-60 blur-3xl"></div>
+
+      <form method="post" class="relative p-8 space-y-6 z-10">
+        {% csrf_token %}
+
+        {% if error %}
+          <div class="rounded-xl border border-red-200 bg-red-50 p-4 text-red-800 text-sm font-medium shadow-sm">{{ error }}</div>
+        {% endif %}
+
+        <!-- Topic -->
+        <div>
+          <label for="topic" class="block text-sm font-semibold text-gray-700 mb-1">🎯 Flashcard Topic (optional)</label>
+          <input id="topic" name="topic" type="text" value="{{ request.POST.topic|default_if_none:'' }}" placeholder="Examples: Photosynthesis, Binary Search, No topic..." class="w-full rounded-xl border-gray-300 text-gray-900 placeholder-gray-400 p-3 ring-1 ring-gray-200 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 transition-all duration-200" />
+          <p class="mt-1 text-xs text-gray-500">If left blank, AI will try to generate a flashcard based only on the document (if restricted to document).</p>
+        </div>
+
+        <!-- From this document? -->
+        <div class="flex items-center justify-between gap-4">
+          <div>
+            <span class="block text-sm font-semibold text-gray-700 mb-1">📄 Restrict AI to this document?</span>
+            <p class="text-xs text-gray-500">
+              Turn on to instruct AI to only use content from <span class="font-medium">{{ document.name }}</span>.
+            </p>
+          </div>
+
+          <!-- pretty switch -->
+          <label class="relative inline-flex items-center cursor-pointer select-none">
+            <input type="checkbox" id="isDocumentLimited" name="isDocumentLimited" class="sr-only peer" />
+            <div class="w-12 h-7 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:bg-indigo-500 transition-colors duration-200"></div>
+            <span class="absolute left-1 top-1 w-5 h-5 bg-white rounded-full shadow transform transition-transform duration-200 peer-checked:translate-x-5"></span>
+          </label>
+        </div>
+
+        {% comment %} <!-- Callout -->
+        <div class="rounded-xl border border-indigo-200 bg-indigo-50 p-4 text-indigo-900 text-sm">
+          🤖 <span class="font-medium">Tip:</span> After clicking <em>Generate</em>, you’ll be redirected back to the
+          <span class="font-medium">Create Flashcard</span> page with the question and answer fields already filled in. You can still edit before saving.
+        </div> {% endcomment %}
+
+        <!-- Actions -->
+        <div class="flex items-center justify-end gap-3 pt-2">
+          <a class="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-gray-100 text-gray-800 font-semibold shadow hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300 transition-all">← Back</a>
+
+          <button type="submit" class="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold shadow hover:from-purple-600 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all">✨ Generate</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Footer hint -->
+    <div class="mt-8 text-center text-xs text-gray-500">Need to tweak later? You can always refine the generated question/answer on the Create page before saving.</div>
+  </div>
+{% endblock %}

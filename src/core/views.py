@@ -8,6 +8,11 @@ from openai import OpenAI
 from .forms import SignUpForm
 from django.contrib.auth import login
 from django.conf import settings
+from django.views import View
+from django.http import HttpResponse
+import logging
+
+logger = logging.getLogger(__name__)
 
 def extract_pdf_text(file):
     doc = fitz.open(file.path)
@@ -17,7 +22,7 @@ def extract_pdf_text(file):
         text += page.get_text()
     return text 
 
-def summarize_text_with_openrouter(text: str) -> str:
+def summarize_text_with_openrouter(text) :
     try:
         prompt = (
             "Please summarize the following text. Only return the summary—do not include any additional "
@@ -25,6 +30,26 @@ def summarize_text_with_openrouter(text: str) -> str:
             f"details in a concise manner:\n\n{text}"
         )
 
+        client = OpenAI(
+            base_url=settings.OPENAI_BASE_URL,
+            api_key=settings.OPENAI_API_KEY,
+        )
+
+        completion = client.chat.completions.create(
+            model=settings.OPENAI_MODEL,
+            messages=[{"role": "user", "content": prompt}],
+        )
+
+        return completion.choices[0].message.content.strip()
+
+    except Exception as e:
+        return None
+    
+    
+
+    
+def summarize_text_with_openrouter(prompt) -> str:
+    try:
         client = OpenAI(
             base_url=settings.OPENAI_BASE_URL,
             api_key=settings.OPENAI_API_KEY,
@@ -132,9 +157,15 @@ class DocumentCreateView(LoginRequiredMixin,CreateView):
         form.instance.course = self.course
         
         response = super().form_valid(form)
-    
         pdf_text = extract_pdf_text(form.instance.file)
-        summary = summarize_text_with_openrouter(pdf_text)
+        
+        prompt = (
+            "Please summarize the following text. Only return the summary—do not include any additional "
+            "text or commentary. The summary should capture the key points, main ideas, and any important "
+            f"details in a concise manner:\n\n{pdf_text}"
+        )
+    
+        summary = summarize_text_with_openrouter(prompt)
         
         form.instance.summary = summary
         form.instance.save(update_fields=['summary'])
@@ -194,6 +225,15 @@ class FlashcardCreateView(LoginRequiredMixin,CreateView):
         ctx =  super().get_context_data(**kwargs)
         ctx['document'] = self.document
         return ctx
+    
+    def get_initial(self):
+        initial = super().get_initial()
+        key = f"flashcard_prefill_{self.document.pk}"
+        prefill = self.request.session.pop(key, None)
+        if prefill :
+            initial.update(prefill)
+        return initial
+
 
 
     def form_valid(self, form):
@@ -226,3 +266,68 @@ class FlashcardDeleteView(LoginRequiredMixin,DeleteView):
     
     def get_success_url(self):
         return reverse_lazy('document-detail', args=[self.object.document.pk])
+    
+    
+def generate_flashcard_with_ai(topic , is_limited , text):
+    try:
+        prompt = (
+            "You are an assistant that generates a single flashcard. "
+            f"Topic (optional): {topic or 'None'}. "
+            f"Restrict to this document: {is_limited}. "
+            + (f"Document content: {text}. ")
+            + "Instructions: "
+            "1. Generate exactly one flashcard. "
+            "2. The result MUST be returned strictly as a Python dictionary with two keys: \"question\" and \"answer\". "
+            "3. Do not include any other text, explanation, or formatting. "
+            "4. \"question\" should be concise and test understanding. "
+            "5. \"answer\" should be clear, short, and correct. "
+            "Output format example: {\"question\": \"What is the capital of France?\", \"answer\": \"Paris\"}"
+        )
+
+
+        client = OpenAI(
+            base_url=settings.OPENAI_BASE_URL,
+            api_key=settings.OPENAI_API_KEY,
+        )
+
+        completion = client.chat.completions.create(
+            model=settings.OPENAI_MODEL,
+            messages=[{"role": "user", "content": prompt}],
+        )
+
+        print('generated')
+        return completion.choices[0].message.content.strip()
+
+    except Exception as e:
+            logger.exception("Flashcard generation failed for topic='%s': %s", topic, str(e))
+            return None
+    
+
+
+class FlashcardGenerate(View):
+
+    def post(self, request, *args, **kwargs) :
+        document = get_object_or_404(Document, pk=kwargs['pk'])
+        topic = request.POST.get('topic')
+        is_limited = 'Yes' if request.POST.get('isDocumentLimited') else 'No'
+        text = extract_pdf_text(document.file)
+        flashcard = generate_flashcard_with_ai(topic ,is_limited , text)
+        
+        fake = {'question':'this is fake question','answer':'this is fake answer'}
+        print(flashcard)
+        
+        key = f"flashcard_prefill_{document.pk}"
+        request.session[key] = flashcard
+        request.session.modified = True
+        
+        return redirect(reverse('flashcard-create', args=[document.pk]))
+    
+    def get(self,request, *args, **kwargs):
+        document = get_object_or_404(Document, pk=kwargs['pk'])
+        context = {
+            "document": document
+        }
+        return render(request, "core/flashcard_generate.html",context)
+    
+    
+
