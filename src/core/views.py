@@ -22,48 +22,26 @@ def extract_pdf_text(file):
         text += page.get_text()
     return text 
 
-def summarize_text_with_openrouter(text) :
+def openrouter_caller(prompt):
     try:
-        prompt = (
-            "Please summarize the following text. Only return the summary—do not include any additional "
-            "text or commentary. The summary should capture the key points, main ideas, and any important "
-            f"details in a concise manner:\n\n{text}"
-        )
-
         client = OpenAI(
             base_url=settings.OPENAI_BASE_URL,
-            api_key=settings.OPENAI_API_KEY,
+            api_key=settings.OPENAI_API_KEY_2,
         )
 
         completion = client.chat.completions.create(
-            model=settings.OPENAI_MODEL,
+            model=settings.OPENAI_MODEL_2,
             messages=[{"role": "user", "content": prompt}],
         )
 
         return completion.choices[0].message.content.strip()
 
     except Exception as e:
-        return None
-    
-    
+        # Print the error for debugging
+        print(f"Error in openrouter_caller: {e}")
+        # Or you can return the error as a string
+        return f"Error: {str(e)}"
 
-    
-def summarize_text_with_openrouter(prompt) -> str:
-    try:
-        client = OpenAI(
-            base_url=settings.OPENAI_BASE_URL,
-            api_key=settings.OPENAI_API_KEY,
-        )
-
-        completion = client.chat.completions.create(
-            model=settings.OPENAI_MODEL,
-            messages=[{"role": "user", "content": prompt}],
-        )
-
-        return completion.choices[0].message.content.strip()
-
-    except Exception:
-        return 
 
 
 
@@ -165,7 +143,7 @@ class DocumentCreateView(LoginRequiredMixin,CreateView):
             f"details in a concise manner:\n\n{pdf_text}"
         )
     
-        summary = summarize_text_with_openrouter(prompt)
+        summary = openrouter_caller(prompt)
         
         form.instance.summary = summary
         form.instance.save(update_fields=['summary'])
@@ -268,8 +246,16 @@ class FlashcardDeleteView(LoginRequiredMixin,DeleteView):
         return reverse_lazy('document-detail', args=[self.object.document.pk])
     
     
-def generate_flashcard_with_ai(topic , is_limited , text):
-    try:
+
+class FlashcardGenerate(View):
+
+    def post(self, request, *args, **kwargs) :
+        document = get_object_or_404(Document, pk=kwargs['pk'])
+        topic = request.POST.get('topic')
+        is_limited = 'Yes' if request.POST.get('isDocumentLimited') else 'No'
+        text = extract_pdf_text(document.file)
+        
+        fake = {'question':'this is fake question','answer':'this is fake answer'}
         prompt = (
             "You are an assistant that generates a single flashcard. "
             f"Topic (optional): {topic or 'None'}. "
@@ -283,38 +269,8 @@ def generate_flashcard_with_ai(topic , is_limited , text):
             "5. \"answer\" should be clear, short, and correct. "
             "Output format example: {\"question\": \"What is the capital of France?\", \"answer\": \"Paris\"}"
         )
-
-
-        client = OpenAI(
-            base_url=settings.OPENAI_BASE_URL,
-            api_key=settings.OPENAI_API_KEY,
-        )
-
-        completion = client.chat.completions.create(
-            model=settings.OPENAI_MODEL,
-            messages=[{"role": "user", "content": prompt}],
-        )
-
-        print('generated')
-        return completion.choices[0].message.content.strip()
-
-    except Exception as e:
-            logger.exception("Flashcard generation failed for topic='%s': %s", topic, str(e))
-            return None
-    
-
-
-class FlashcardGenerate(View):
-
-    def post(self, request, *args, **kwargs) :
-        document = get_object_or_404(Document, pk=kwargs['pk'])
-        topic = request.POST.get('topic')
-        is_limited = 'Yes' if request.POST.get('isDocumentLimited') else 'No'
-        text = extract_pdf_text(document.file)
-        flashcard = generate_flashcard_with_ai(topic ,is_limited , text)
         
-        fake = {'question':'this is fake question','answer':'this is fake answer'}
-        print(flashcard)
+        flashcard = openrouter_caller(prompt)
         
         key = f"flashcard_prefill_{document.pk}"
         request.session[key] = flashcard
