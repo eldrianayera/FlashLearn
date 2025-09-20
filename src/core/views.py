@@ -7,6 +7,7 @@ import fitz
 from openai import OpenAI
 from .forms import SignUpForm
 from django.contrib.auth import login
+from django.conf import settings
 
 def extract_pdf_text(file):
     doc = fitz.open(file.path)
@@ -22,8 +23,8 @@ def summarize_text_with_openrouter(text):
 
 
     client = OpenAI(
-        base_url="https://openrouter.ai/api/v1",
-        api_key="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",
+        base_url=settings.OPENAI_BASE_URL,
+        api_key=settings.OPENAI_API_KEY,
     )
     
     
