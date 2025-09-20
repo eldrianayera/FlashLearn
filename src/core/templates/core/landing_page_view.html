@@ -5,140 +5,187 @@
 {% endblock %}
 
 {% block content %}
-  <div class="max-w-6xl mx-auto py-10 px-4">
-    <!-- HERO -->
-    <section class="bg-white border border-gray-200 rounded-2xl p-10 shadow-sm mb-12">
-      <div class="grid md:grid-cols-2 gap-8 items-center">
-        <div>
-          <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900">Turn PDFs into Summaries & Flashcards</h1>
-          <p class="mt-3 text-gray-600">FlashLearn lets you upload academic PDFs, generate concise AI summaries, and study with auto-built flashcards — all in one organized workspace.</p>
-          <div class="mt-6 flex flex-wrap gap-3">
-            <a class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-blue-600 text-white text-sm font-medium shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">Get started — it’s free</a>
-            <a href="{% url 'login' %}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-gray-300 bg-white text-gray-800 text-sm font-medium hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-300">Log in</a>
-          </div>
-          <div class="mt-4 text-xs text-gray-500">No credit card required • Works with research papers, lecture notes, and handouts</div>
-        </div>
+  <div class="relative overflow-hidden">
+    <!-- Decorative floating blobs -->
+    <div class="pointer-events-none absolute inset-0 -z-10">
+      <div class="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-gradient-to-tr from-pink-400 to-orange-300 blur-3xl opacity-30 animate-pulse"></div>
+      <div class="absolute top-1/3 -right-16 h-80 w-80 rounded-full bg-gradient-to-br from-cyan-300 to-blue-400 blur-3xl opacity-30 animate-[pulse_6s_ease-in-out_infinite]"></div>
+      <div class="absolute -bottom-28 left-1/3 h-64 w-64 rounded-full bg-gradient-to-br from-violet-400 to-fuchsia-400 blur-3xl opacity-25 animate-[pulse_7s_ease-in-out_infinite]"></div>
+    </div>
 
-        <!-- Minimal Preview Card -->
-        <div class="bg-gray-50 border border-gray-200 rounded-xl p-5">
-          <div class="mb-3">
-            <div class="text-xs text-gray-500 mb-1">Sample output</div>
-            <h3 class="text-lg font-semibold text-gray-900">“Neural Networks for NLP”</h3>
-            <p class="text-xs text-gray-400">Uploaded • PDF • 18 pages</p>
-          </div>
-          <div class="space-y-3">
-            <div class="bg-white border border-gray-200 rounded-lg p-4">
-              <div class="text-sm font-semibold mb-1">AI Summary</div>
-              <p class="text-sm text-gray-600 line-clamp-3">The paper surveys RNNs, CNNs, and Transformers for language modeling, detailing attention mechanisms, pretraining objectives, and transfer learning benefits for low-resource tasks.</p>
+    <div class="max-w-7xl mx-auto py-14 px-4">
+      <!-- HERO -->
+      <section class="rounded-3xl p-1 mb-12 bg-gradient-to-tr from-indigo-500 via-fuchsia-500 to-amber-400 shadow-xl">
+        <div class="rounded-3xl bg-white/90 backdrop-blur p-10 md:p-14">
+          <div class="grid md:grid-cols-2 gap-10 items-center">
+            <div>
+              <span class="inline-flex items-center gap-2 text-xs font-semibold tracking-wide uppercase text-fuchsia-700 bg-fuchsia-100/70 px-3 py-1 rounded-full">✨ New • AI Study Buddy</span>
+              <h1 class="mt-4 text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight">Turn PDFs into <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-fuchsia-600 to-rose-500 animate-[pulse_5s_infinite]">Playful Summaries</span> & <span class="bg-clip-text text-transparent bg-gradient-to-r from-emerald-500 to-teal-600">Smart Flashcards</span></h1>
+              <p class="mt-4 text-gray-600 text-lg">Upload notes, papers, or slides — FlashLearn cooks up colorful summaries and quiz-ready flashcards so you can study faster (and have fun doing it).</p>
+              <div class="mt-7 flex flex-wrap gap-3">
+                <a href="{% url 'signup' %}" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-fuchsia-600 to-rose-500 text-white text-sm font-semibold shadow hover:opacity-95 focus:outline-none focus:ring-2 focus:ring-rose-400">🚀 Get started — it’s free</a>
+                <a href="{% url 'login' %}" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-gray-300 bg-white text-gray-800 text-sm font-semibold hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-300">🔑 Log in</a>
+              </div>
+              <div class="mt-3 text-xs text-gray-500">No credit card required • Perfect for research papers, lecture notes, and handouts</div>
             </div>
-            <div class="bg-white border border-gray-200 rounded-lg p-4">
-              <div class="text-sm font-semibold mb-2">Flashcards</div>
-              <ul class="space-y-2 text-sm text-gray-700">
-                <li>
-                  Q: What problem does attention solve? — <span class="text-gray-500">Long-range dependency and context focus.</span>
-                </li>
-                <li>
-                  Q: Core advantage of Transformers? — <span class="text-gray-500">Parallelization and global context.</span>
-                </li>
-                <li>
-                  Q: Typical pretraining task? — <span class="text-gray-500">Masked language modeling.</span>
-                </li>
-              </ul>
+
+            <!-- Colorful Preview Card -->
+            <div class="group bg-gradient-to-br from-indigo-50 via-fuchsia-50 to-amber-50 border border-gray-200 rounded-2xl p-6 shadow-md hover:shadow-lg transition-shadow">
+              <div class="mb-4">
+                <div class="text-xs text-gray-500 mb-1">Sample output</div>
+                <h3 class="text-xl font-bold text-gray-900">“Neural Networks for NLP”</h3>
+                <p class="text-xs text-gray-400">Uploaded • PDF • 18 pages</p>
+              </div>
+              <div class="space-y-4">
+                <div class="bg-white/90 border border-indigo-100 rounded-xl p-4">
+                  <div class="flex items-center gap-2 text-sm font-semibold mb-1 text-indigo-700">
+                    <span>🧾</span> AI Summary
+                  </div>
+                  <p class="text-sm text-gray-700">The paper contrasts RNNs, CNNs, and Transformers, highlighting attention, pretraining tasks, and transfer learning benefits for low-resource settings.</p>
+                </div>
+                <div class="bg-white/90 border border-rose-100 rounded-xl p-4">
+                  <div class="flex items-center gap-2 text-sm font-semibold mb-2 text-rose-700">
+                    <span>🧠</span> Flashcards
+                  </div>
+                  <ul class="space-y-2 text-sm text-gray-800">
+                    <li class="flex items-start gap-2">
+                      <span class="mt-0.5">❓</span>
+                      <span>What problem does attention solve? — <span class="text-gray-500">Long-range dependency and context focus.</span></span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <span class="mt-0.5">❓</span>
+                      <span>Core advantage of Transformers? — <span class="text-gray-500">Parallelization and global context.</span></span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                      <span class="mt-0.5">❓</span>
+                      <span>Typical pretraining task? — <span class="text-gray-500">Masked language modeling.</span></span>
+                    </li>
+                  </ul>
+                </div>
+                <div class="flex items-center gap-3 text-xs">
+                  <span class="px-2 py-1 rounded-full bg-emerald-100 text-emerald-700">Fast</span>
+                  <span class="px-2 py-1 rounded-full bg-cyan-100 text-cyan-700">Accurate</span>
+                  <span class="px-2 py-1 rounded-full bg-amber-100 text-amber-700">Fun</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- FEATURES -->
-    <section class="mb-12">
-      <h2 class="text-xl font-semibold mb-4">Why FlashLearn?</h2>
-      <div class="grid md:grid-cols-2 gap-6">
-        <article class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-          <h3 class="font-semibold text-gray-900">📄 AI summaries from PDFs</h3>
-          <p class="mt-1 text-sm text-gray-600">Upload a PDF and get a clear, structured summary that surfaces key ideas, definitions, and takeaways.</p>
-        </article>
-        <article class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-          <h3 class="font-semibold text-gray-900">🧠 Auto-generated flashcards</h3>
-          <p class="mt-1 text-sm text-gray-600">Instantly convert concepts into Q&A pairs so you can review faster and remember longer.</p>
-        </article>
-        <article class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-          <h3 class="font-semibold text-gray-900">📚 Organized by courses</h3>
-          <p class="mt-1 text-sm text-gray-600">Keep documents, notes, and flashcards neatly grouped per course with searchable access.</p>
-        </article>
-        <article class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-          <h3 class="font-semibold text-gray-900">🔒 Your files stay yours</h3>
-          <p class="mt-1 text-sm text-gray-600">You’re always in control of your uploads and can download originals anytime.</p>
-        </article>
-      </div>
-    </section>
-
-    <!-- HOW IT WORKS -->
-    <section class="mb-12">
-      <h2 class="text-xl font-semibold mb-4">How it works</h2>
-      <ol class="grid md:grid-cols-4 gap-6">
-        <li class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-          <div class="text-sm font-semibold text-gray-900">1) Create a course</div>
-          <p class="mt-1 text-sm text-gray-600">Set up a course to group your materials by subject.</p>
-        </li>
-        <li class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-          <div class="text-sm font-semibold text-gray-900">2) Upload a PDF</div>
-          <p class="mt-1 text-sm text-gray-600">Add lecture slides, papers, or notes (PDF format).</p>
-        </li>
-        <li class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-          <div class="text-sm font-semibold text-gray-900">3) Get the summary</div>
-          <p class="mt-1 text-sm text-gray-600">FlashLearn generates a concise, readable overview.</p>
-        </li>
-        <li class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-          <div class="text-sm font-semibold text-gray-900">4) Review with flashcards</div>
-          <p class="mt-1 text-sm text-gray-600">Practice key concepts with auto-built Q&A.</p>
-        </li>
-      </ol>
-    </section>
-
-    <!-- CTA STRIP -->
-    <section class="mb-12">
-      <div class="bg-blue-600 rounded-2xl text-white p-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-          <h3 class="text-2xl font-bold">Study 2x faster with AI-powered summaries</h3>
-          <p class="text-blue-100 mt-1">Create your free account and start with your first PDF today.</p>
+      <!-- FEATURES -->
+      <section class="mb-12">
+        <h2 class="text-2xl font-bold mb-5 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-fuchsia-600 to-rose-500">Why FlashLearn?</h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <article class="bg-white rounded-2xl border border-indigo-100 p-6 shadow-sm hover:shadow-md transition-shadow">
+            <h3 class="font-semibold text-indigo-800">📄 AI summaries from PDFs</h3>
+            <p class="mt-2 text-sm text-gray-600">Upload a PDF and get a bright, structured summary with key ideas, definitions, and takeaways.</p>
+          </article>
+          <article class="bg-white rounded-2xl border border-rose-100 p-6 shadow-sm hover:shadow-md transition-shadow">
+            <h3 class="font-semibold text-rose-800">🧠 Auto-generated flashcards</h3>
+            <p class="mt-2 text-sm text-gray-600">Instantly turn concepts into Q&A so you review faster and remember longer.</p>
+          </article>
+          <article class="bg-white rounded-2xl border border-emerald-100 p-6 shadow-sm hover:shadow-md transition-shadow">
+            <h3 class="font-semibold text-emerald-800">📚 Organized by courses</h3>
+            <p class="mt-2 text-sm text-gray-600">Keep documents, notes, and flashcards neatly grouped per course with search.</p>
+          </article>
+          <article class="bg-white rounded-2xl border border-amber-100 p-6 shadow-sm hover:shadow-md transition-shadow">
+            <h3 class="font-semibold text-amber-800">🔒 Your files stay yours</h3>
+            <p class="mt-2 text-sm text-gray-600">You control your uploads; download originals anytime.</p>
+          </article>
         </div>
-        <div class="flex gap-3">
-          <a class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white text-blue-700 text-sm font-semibold hover:bg-blue-50">Sign up free</a>
-          <a href="{% url 'login' %}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-white/30 text-white text-sm font-medium hover:bg-white/10">Log in</a>
+      </section>
+
+      <!-- HOW IT WORKS -->
+      <section class="mb-12">
+        <h2 class="text-2xl font-bold mb-5 bg-clip-text text-transparent bg-gradient-to-r from-teal-600 to-emerald-500">How it works</h2>
+        <ol class="grid md:grid-cols-4 gap-6">
+          <li class="bg-white border border-teal-100 rounded-2xl p-6 shadow-sm">
+            <div class="text-sm font-semibold text-teal-700">1) Create a course</div>
+            <p class="mt-1 text-sm text-gray-600">Group your materials by subject.</p>
+          </li>
+          <li class="bg-white border border-cyan-100 rounded-2xl p-6 shadow-sm">
+            <div class="text-sm font-semibold text-cyan-700">2) Upload a PDF</div>
+            <p class="mt-1 text-sm text-gray-600">Add lecture slides, papers, or notes.</p>
+          </li>
+          <li class="bg-white border border-fuchsia-100 rounded-2xl p-6 shadow-sm">
+            <div class="text-sm font-semibold text-fuchsia-700">3) Get the summary</div>
+            <p class="mt-1 text-sm text-gray-600">Readable overviews in seconds.</p>
+          </li>
+          <li class="bg-white border border-amber-100 rounded-2xl p-6 shadow-sm">
+            <div class="text-sm font-semibold text-amber-700">4) Review with flashcards</div>
+            <p class="mt-1 text-sm text-gray-600">Practice key concepts with Q&A.</p>
+          </li>
+        </ol>
+      </section>
+
+      <!-- TESTIMONIAL / SOCIAL PROOF -->
+      <section class="mb-12">
+        <div class="rounded-3xl p-1 bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-500 shadow-lg">
+          <div class="rounded-3xl bg-white p-8">
+            <div class="grid md:grid-cols-3 gap-6 text-center">
+              <div>
+                <div class="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 to-teal-600">2×</div>
+                <p class="text-sm text-gray-600 mt-1">Faster study time</p>
+              </div>
+              <div>
+                <div class="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-fuchsia-600 to-rose-600">95%</div>
+                <p class="text-sm text-gray-600 mt-1">Feel more prepared</p>
+              </div>
+              <div>
+                <div class="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-blue-600">1M+</div>
+                <p class="text-sm text-gray-600 mt-1">Cards generated*</p>
+              </div>
+            </div>
+            <p class="mt-3 text-xs text-gray-400 text-center">*Illustrative metrics</p>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- FAQ -->
-    <section class="mb-8">
-      <h2 class="text-xl font-semibold mb-4">Frequently asked questions</h2>
-      <div class="space-y-3">
-        <details class="group bg-white border border-gray-200 rounded-lg p-4">
-          <summary class="cursor-pointer flex justify-between items-center text-sm font-medium text-gray-800">
-            What file types are supported?
-            <span class="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
-          </summary>
-          <div class="mt-2 text-sm text-gray-600">FlashLearn currently supports PDF uploads. You can always download your original file.</div>
-        </details>
-        <details class="group bg-white border border-gray-200 rounded-lg p-4">
-          <summary class="cursor-pointer flex justify-between items-center text-sm font-medium text-gray-800">
-            Can I edit the summary and flashcards?
-            <span class="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
-          </summary>
-          <div class="mt-2 text-sm text-gray-600">Yes. After generation, you can refine notes and update Q&A pairs to fit your study style.</div>
-        </details>
-        <details class="group bg-white border border-gray-200 rounded-lg p-4">
-          <summary class="cursor-pointer flex justify-between items-center text-sm font-medium text-gray-800">
-            Is FlashLearn free?
-            <span class="text-gray-400 group-open:rotate-180 transition-transform">▼</span>
-          </summary>
-          <div class="mt-2 text-sm text-gray-600">You can start for free. Upgrade later for higher limits when you need them.</div>
-        </details>
-      </div>
-    </section>
+      <!-- CTA STRIP -->
+      <section class="mb-12">
+        <div class="bg-gradient-to-r from-indigo-600 via-fuchsia-600 to-rose-500 rounded-3xl text-white p-8 md:p-10 flex flex-col md:flex-row md:items-center md:justify-between gap-4 shadow-xl">
+          <div>
+            <h3 class="text-3xl font-extrabold">Study 2× faster with AI-powered summaries</h3>
+            <p class="opacity-90 mt-1">Create your free account and start with your first PDF today.</p>
+          </div>
+          <div class="flex gap-3">
+            <a href="{% url 'signup' %}" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-fuchsia-700 text-sm font-semibold hover:bg-fuchsia-50">🎉 Sign up free</a>
+            <a href="{% url 'login' %}" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl ring-1 ring-white/50 text-white text-sm font-semibold hover:bg-white/10">Log in</a>
+          </div>
+        </div>
+      </section>
 
-    <!-- FOOTER NOTE -->
-    <footer class="mt-10 text-center text-xs text-gray-500">© {{ now|date:'Y' }} FlashLearn. Study smarter, not harder.</footer>
+      <!-- FAQ -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-bold mb-5 bg-clip-text text-transparent bg-gradient-to-r from-rose-600 to-orange-500">Frequently asked questions</h2>
+        <div class="space-y-3">
+          <details class="group bg-white border border-rose-100 rounded-xl p-5 shadow-sm">
+            <summary class="cursor-pointer flex justify-between items-center text-sm font-semibold text-rose-800">
+              What file types are supported?
+              <span class="text-rose-400 group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <div class="mt-2 text-sm text-gray-600">FlashLearn currently supports PDF uploads. You can always download your original file.</div>
+          </details>
+          <details class="group bg-white border border-indigo-100 rounded-xl p-5 shadow-sm">
+            <summary class="cursor-pointer flex justify-between items-center text-sm font-semibold text-indigo-800">
+              Can I edit the summary and flashcards?
+              <span class="text-indigo-400 group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <div class="mt-2 text-sm text-gray-600">Yes. After generation, you can refine notes and update Q&A pairs to fit your style.</div>
+          </details>
+          <details class="group bg-white border border-emerald-100 rounded-xl p-5 shadow-sm">
+            <summary class="cursor-pointer flex justify-between items-center text-sm font-semibold text-emerald-800">
+              Is FlashLearn free?
+              <span class="text-emerald-400 group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <div class="mt-2 text-sm text-gray-600">Start free with generous limits. Upgrade later for more power when you need it.</div>
+          </details>
+        </div>
+      </section>
+
+      <!-- FOOTER NOTE -->
+      <footer class="mt-10 text-center text-xs text-gray-500">© {{ now|date:'Y' }} FlashLearn. Study smarter, not harder.</footer>
+    </div>
   </div>
 {% endblock %}

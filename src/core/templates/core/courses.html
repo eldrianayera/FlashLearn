@@ -63,6 +63,7 @@
                     {% with total=0 %}
                       {% for d in course.documents.all %}
                         {% with total=total|add:d.flashcards.count %}
+
                         {% endwith %}
                       {% endfor %}{{ total }} cards
                     {% endwith %}
@@ -93,7 +94,7 @@
                   <path d="M18.06 5.94 6.5 17.5l-.5 3 3-.5L20.56 8.44 18.06 5.94Z" />
                 </svg>Edit
               </a>
-              <a href="{% url 'course-delete' course.slug %}" onclick="return confirm('Delete “{{ course.name }}”? This cannot be undone.');" class="inline-flex items-center gap-1.5 rounded-lg bg-white/90 px-3 py-1.5 text-xs font-medium text-red-700 shadow ring-1 ring-red-200 hover:bg-white hover:shadow-md focus:outline-none focus:ring-2 focus:ring-red-400">
+              <a href="{% url 'course-delete' course.slug %}" class="inline-flex items-center gap-1.5 rounded-lg bg-white/90 px-3 py-1.5 text-xs font-medium text-red-700 shadow ring-1 ring-red-200 hover:bg-white hover:shadow-md focus:outline-none focus:ring-2 focus:ring-red-400">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M9 3.75A1.75 1.75 0 0 1 10.75 2h2.5A1.75 1.75 0 0 1 15 3.75V5h4a.75.75 0 0 1 0 1.5h-1.03l-1.07 12.03A3 3 0 0 1 13.91 21H10.1a3 3 0 0 1-2.99-2.47L6.03 6.5H5A.75.75 0 0 1 5 5h4V3.75ZM7.54 6.5l1.03 11.59a1.5 1.5 0 0 0 1.49 1.31h3.81a1.5 1.5 0 0 0 1.49-1.31L16.46 6.5H7.54Z" />
                 </svg>Delete

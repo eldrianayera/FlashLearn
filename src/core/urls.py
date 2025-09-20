@@ -1,8 +1,11 @@
+from django.shortcuts import redirect
 from django.urls import path , include
+from django.contrib.auth import views as auth_views
 from . import views
 
 urlpatterns = [
     path('accounts/', include("django.contrib.auth.urls")),
+    path('accounts/login/',auth_views.LoginView.as_view(template_name="registration/login.html",redirect_authenticated_user=True),name='login'),
     path('accounts/signup/', views.UserCreateView.as_view() , name="signup"),
     path('courses/', views.CourseListView.as_view() , name="courses"),
     path('courses/create/', views.CourseCreateView.as_view() , name="course-create"),

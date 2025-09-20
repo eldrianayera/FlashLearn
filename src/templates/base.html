@@ -14,12 +14,12 @@
   </head>
   <body class="bg-gray-50 text-gray-900">
     <!-- NAVBAR -->
-    <nav class="bg-white border-b border-gray-200 shadow-sm">
+    <nav class="bg-white border-b border-gray-200 shadow-sm z-99 fixed w-full">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
           <!-- Left side -->
           <div class="flex">
-            <a href="{% url 'courses' %}" class="flex items-center text-xl font-bold text-blue-600">FlashLearn</a>
+            <a href="{% url 'home' %}" class="flex items-center text-xl font-bold text-blue-600">FlashLearn</a>
             <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
               <a href="{% url 'courses' %}" class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 hover:text-blue-600">Courses</a>
               <!-- Add more links if needed -->
@@ -44,7 +44,7 @@
     </nav>
 
     <!-- MAIN CONTENT -->
-    <main class="py-6">
+    <main class="py-20">
       {% block content %}
 
       {% endblock %}

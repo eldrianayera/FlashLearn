@@ -26,11 +26,11 @@ def openrouter_caller(prompt):
     try:
         client = OpenAI(
             base_url=settings.OPENAI_BASE_URL,
-            api_key=settings.OPENAI_API_KEY_2,
+            api_key=settings.OPENAI_API_KEY,
         )
 
         completion = client.chat.completions.create(
-            model=settings.OPENAI_MODEL_2,
+            model=settings.OPENAI_MODEL,
             messages=[{"role": "user", "content": prompt}],
         )
 
@@ -51,6 +51,11 @@ def openrouter_caller(prompt):
 class LandingPageView(TemplateView):
     template_name = "core/landing_page_view.html"
     
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated :
+            return redirect(reverse_lazy('courses'))
+        return super().dispatch(request, *args, **kwargs)
+    
 
 class UserCreateView(CreateView):
     form_class = SignUpForm
@@ -60,7 +65,7 @@ class UserCreateView(CreateView):
     # If user is already authenticated, keep them out of signup
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated :
-            return redirect(self.get_success_url())
+            return redirect('courses')
         return super().dispatch(request, *args, **kwargs)
     
     # Auto-login after successful signup
@@ -253,14 +258,13 @@ class FlashcardGenerate(View):
         document = get_object_or_404(Document, pk=kwargs['pk'])
         topic = request.POST.get('topic')
         is_limited = 'Yes' if request.POST.get('isDocumentLimited') else 'No'
-        text = extract_pdf_text(document.file)
         
-        fake = {'question':'this is fake question','answer':'this is fake answer'}
+        
         prompt = (
             "You are an assistant that generates a single flashcard. "
             f"Topic (optional): {topic or 'None'}. "
             f"Restrict to this document: {is_limited}. "
-            + (f"Document content: {text}. ")
+            + (f"Document content: {document.name}. ")
             + "Instructions: "
             "1. Generate exactly one flashcard. "
             "2. The result MUST be returned strictly as a Python dictionary with two keys: \"question\" and \"answer\". "
@@ -269,6 +273,7 @@ class FlashcardGenerate(View):
             "5. \"answer\" should be clear, short, and correct. "
             "Output format example: {\"question\": \"What is the capital of France?\", \"answer\": \"Paris\"}"
         )
+        
         
         flashcard = openrouter_caller(prompt)
         
