@@ -17,30 +17,28 @@ def extract_pdf_text(file):
         text += page.get_text()
     return text 
 
+def summarize_text_with_openrouter(text: str) -> str:
+    try:
+        prompt = (
+            "Please summarize the following text. Only return the summary—do not include any additional "
+            "text or commentary. The summary should capture the key points, main ideas, and any important "
+            f"details in a concise manner:\n\n{text}"
+        )
 
-def summarize_text_with_openrouter(text):
-    prompt = f"Please summarize the following text. Only return the summary—do not include any additional text or commentary. The summary should capture the key points, main ideas, and any important details in a concise manner: {text}"
+        client = OpenAI(
+            base_url=settings.OPENAI_BASE_URL,
+            api_key=settings.OPENAI_API_KEY,
+        )
 
+        completion = client.chat.completions.create(
+            model=settings.OPENAI_MODEL,
+            messages=[{"role": "user", "content": prompt}],
+        )
 
-    client = OpenAI(
-        base_url=settings.OPENAI_BASE_URL,
-        api_key=settings.OPENAI_API_KEY,
-    )
-    
-    
-    completion = client.chat.completions.create(
-    extra_headers={},
-    extra_body={},
-    model="openai/gpt-oss-20b:free",
-    messages=[
-        {
-        "role": "user",
-        "content": prompt
-        }
-    ]
-    )
-    summary = completion.choices[0].message.content 
-    return summary
+        return completion.choices[0].message.content.strip()
+
+    except Exception:
+        return 
 
 
 

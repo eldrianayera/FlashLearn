@@ -42,6 +42,7 @@
     </div>
 
     <!-- Content -->
+
     <div class="space-y-6">
       {% if document.summary %}
         <div class="bg-green-50 border border-green-200 rounded-lg p-4">
@@ -49,14 +50,14 @@
           <p class="text-green-900 text-sm leading-relaxed">{{ document.summary }}</p>
         </div>
       {% endif %}
-
-      {% if document.document_note %}
-        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <h2 class="font-semibold text-blue-800 mb-2">Note</h2>
-          <p class="text-blue-900 text-sm leading-relaxed">{{ document.document_note }}</p>
-        </div>
-      {% endif %}
     </div>
+
+    {% if document.document_note %}
+      <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 space-y-6">
+        <h2 class="font-semibold text-blue-800 mb-2">Note</h2>
+        <p class="text-blue-900 text-sm leading-relaxed">{{ document.document_note }}</p>
+      </div>
+    {% endif %}
 
     <!-- Flashcards -->
     <div class="mt-10">
@@ -66,7 +67,6 @@
           <span class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-full">{{ document.flashcards.count }}</span>
         </h2>
 
-        <!-- Better Add button -->
         <a href="{% url 'flashcard-create' document.pk %}" class="inline-flex items-center gap-2 rounded-xl bg-blue-600 text-white text-sm font-medium px-4 py-2 shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400">
           <span class="text-base leading-none">➕</span>
           <span>Create Flashcard</span>
