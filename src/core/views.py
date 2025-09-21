@@ -9,8 +9,11 @@ from .forms import SignUpForm
 from django.contrib.auth import login
 from django.conf import settings
 from django.views import View
-from django.http import HttpResponse
+from django.contrib.auth.views import LoginView
 import logging
+import re
+import json
+
 
 logger = logging.getLogger(__name__)
 
@@ -26,14 +29,15 @@ def openrouter_caller(prompt):
     try:
         client = OpenAI(
             base_url=settings.OPENAI_BASE_URL,
-            api_key=settings.OPENAI_API_KEY,
+            api_key=settings.OPENAI_API_KEY_2,
         )
 
         completion = client.chat.completions.create(
-            model=settings.OPENAI_MODEL,
+            model=settings.OPENAI_MODEL_2,
             messages=[{"role": "user", "content": prompt}],
         )
-
+        
+        print('!!!!!!!!!!!!!!!!!!!!!!!!!',completion.choices[0].message.content.strip())        
         return completion.choices[0].message.content.strip()
 
     except Exception as e:
@@ -56,7 +60,6 @@ class LandingPageView(TemplateView):
             return redirect(reverse_lazy('courses'))
         return super().dispatch(request, *args, **kwargs)
     
-
 class UserCreateView(CreateView):
     form_class = SignUpForm
     template_name = "registration/signup.html"
@@ -64,6 +67,7 @@ class UserCreateView(CreateView):
     
     # If user is already authenticated, keep them out of signup
     def dispatch(self, request, *args, **kwargs):
+        print('signup pageee')
         if request.user.is_authenticated :
             return redirect('courses')
         return super().dispatch(request, *args, **kwargs)
@@ -214,6 +218,7 @@ class FlashcardCreateView(LoginRequiredMixin,CreateView):
         key = f"flashcard_prefill_{self.document.pk}"
         prefill = self.request.session.pop(key, None)
         if prefill :
+            print('tahap 3' , prefill)
             initial.update(prefill)
         return initial
 
@@ -257,25 +262,29 @@ class FlashcardGenerate(View):
     def post(self, request, *args, **kwargs) :
         document = get_object_or_404(Document, pk=kwargs['pk'])
         topic = request.POST.get('topic')
-        is_limited = 'Yes' if request.POST.get('isDocumentLimited') else 'No'
+        is_limited = True if request.POST.get('isDocumentLimited') else False
         
+        text = extract_pdf_text(document.file)
+            
+        prompt = f"""
+            WARNING: Please respond with a dictionary format. The dictionary should contain exactly two keys: 'question' and 'answer'. Only a dictionary should be returned, nothing else.
+
+            Context: {text}
+
+            Topic: {topic}
+
+            {'Please limit the question only to the provided context.' if is_limited else 'Please generate a broader question not limited to the provided context.'}
+            
+            Generate a question related to the topic and the provided context. The question should be relevant to the context and topic.
+            """
         
-        prompt = (
-            "You are an assistant that generates a single flashcard. "
-            f"Topic (optional): {topic or 'None'}. "
-            f"Restrict to this document: {is_limited}. "
-            + (f"Document content: {document.name}. ")
-            + "Instructions: "
-            "1. Generate exactly one flashcard. "
-            "2. The result MUST be returned strictly as a Python dictionary with two keys: \"question\" and \"answer\". "
-            "3. Do not include any other text, explanation, or formatting. "
-            "4. \"question\" should be concise and test understanding. "
-            "5. \"answer\" should be clear, short, and correct. "
-            "Output format example: {\"question\": \"What is the capital of France?\", \"answer\": \"Paris\"}"
-        )
+        response = openrouter_caller(prompt)
+        print('tahap 2' , response)
         
+        match = re.search(r'(\{.*\})', response.strip(), re.DOTALL)
+        print(match)
         
-        flashcard = openrouter_caller(prompt)
+        flashcard = json.loads(match.group(1)) if match else {'question':'What is the name of the document ?' , f'answer':'The name of the document is {document.name}'}  
         
         key = f"flashcard_prefill_{document.pk}"
         request.session[key] = flashcard

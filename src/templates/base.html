@@ -14,7 +14,7 @@
   </head>
   <body class="bg-gray-50 text-gray-900">
     <!-- NAVBAR -->
-    <nav class="bg-white border-b border-gray-200 shadow-sm z-99 fixed w-full">
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-300 bg-white/70 backdrop-blur-sm border-b border-transparent">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
           <!-- Left side -->
@@ -22,21 +22,28 @@
             <a href="{% url 'home' %}" class="flex items-center text-xl font-bold text-blue-600">FlashLearn</a>
             <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
               <a href="{% url 'courses' %}" class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 hover:text-blue-600">Courses</a>
-              <!-- Add more links if needed -->
-              {# <a href="#" class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 hover:text-blue-600">Documents</a> #}
             </div>
           </div>
 
           <!-- Right side -->
-          <div class="flex items-center">
+          <div class="flex items-center gap-3">
             {% if user.is_authenticated %}
-              <span class="hidden sm:inline-block mr-4 text-sm text-gray-600">Hello, {{ user.username }}</span>
+              <!-- User chip -->
+              <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 text-sm font-medium">
+                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A9 9 0 1118.88 6.196M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span>{{ user.username }}</span>
+              </div>
+
+              <!-- Logout button -->
               <form action="{% url 'logout' %}" method="post" class="inline">
                 {% csrf_token %}
-                <button type="submit" class="text-sm px-3 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700">Logout</button>
+                <button type="submit" class="px-4 py-2 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-semibold shadow hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-blue-400">Logout</button>
               </form>
             {% else %}
-              <a href="{% url 'login' %}" class="text-sm px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100">Login</a>
+              <!-- Login button -->
+              <a href="{% url 'login' %}" class="px-4 py-2 rounded-full bg-gradient-to-r from-fuchsia-500 to-rose-500 text-white text-sm font-semibold shadow hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-fuchsia-400">Login</a>
             {% endif %}
           </div>
         </div>
@@ -44,10 +51,24 @@
     </nav>
 
     <!-- MAIN CONTENT -->
-    <main class="py-20">
+    <main class="py-16">
       {% block content %}
 
       {% endblock %}
     </main>
+
+    <!-- Script for glassy effect on scroll -->
+    <script>
+      const navbar = document.getElementById('navbar')
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 20) {
+          navbar.classList.add('bg-white/60', 'backdrop-blur-md', 'shadow-md', 'border-gray-200')
+          navbar.classList.remove('bg-white/70', 'backdrop-blur-sm', 'border-transparent')
+        } else {
+          navbar.classList.add('bg-white/70', 'backdrop-blur-sm', 'border-transparent')
+          navbar.classList.remove('bg-white/60', 'backdrop-blur-md', 'shadow-md', 'border-gray-200')
+        }
+      })
+    </script>
   </body>
 </html>
