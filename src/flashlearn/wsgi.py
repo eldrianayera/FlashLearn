@@ -15,3 +15,6 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "flashlearn.settings")
 
 application = get_wsgi_application()
 
+# vercel config
+
+app = application 

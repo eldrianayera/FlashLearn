@@ -2,29 +2,27 @@
   "version": 2,
   "builds": [
     {
-      "src": "flashlearn/wsgi.py", 
+      "src": "flashlearn/wsgi.py",
       "use": "@vercel/python",
-      "config": {
-        "maxLambdaSize": "50mb"
-      }
+      "config": {"maxLambdaSize": "15mb", "runtime": "python3.12"}
     },
     {
       "src": "build.sh",
-      "use": "@vercel/python"
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "staticfiles"
+      }
     }
   ],
   "routes": [
     {
+      "src": "/(.*)",
+      "dest": "flashlearn/wsgi.py"
+    },
+    {
       "src": "/static/(.*)",
       "dest": "/static/$1"
-    },
-    {
-      "src": "/media/(.*)",
-      "dest": "/media/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "flashlearn/wsgi.py"  
     }
   ]
 }
+
